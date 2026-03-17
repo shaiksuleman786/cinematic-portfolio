@@ -28,13 +28,32 @@ export default function Navbar() {
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsOpen(false);
+    
+    // Use Lenis if available for smoother, more reliable scrolling
+    const lenis = (window as any).lenis;
+    
     if (href === "#home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (lenis) {
+        lenis.scrollTo(0, { duration: 1.5 });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
       return;
     }
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
+
+    if (lenis) {
+      // Small timeout to allow mobile menu to start closing
+      setTimeout(() => {
+        lenis.scrollTo(href, { 
+          duration: 1.5,
+          offset: -80 // Offset for navbar height
+        });
+      }, 50);
+    } else {
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -86,7 +105,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="absolute top-full left-0 right-0 bg-transparent border-b border-white/5 flex flex-col items-center py-10 gap-6 md:hidden overflow-hidden"
+              className="absolute top-full left-0 right-0 bg-black/90 backdrop-blur-3xl border-b border-white/5 flex flex-col items-center py-12 gap-8 md:hidden overflow-hidden shadow-2xl"
             >
               {NAV_LINKS.map((link, i) => (
                 <motion.a
@@ -94,9 +113,9 @@ export default function Navbar() {
                   href={link.href}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: i * 0.05 + 0.1 }}
                   onClick={(e) => scrollToSection(e, link.href)}
-                  className="text-white/60 text-lg font-medium hover:text-white transition-colors tracking-widest uppercase"
+                  className="text-white/60 text-xl font-medium hover:text-white transition-colors tracking-[0.2em] uppercase"
                 >
                   {link.name}
                 </motion.a>
