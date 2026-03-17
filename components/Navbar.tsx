@@ -86,7 +86,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-b border-white/10 flex flex-col items-center py-10 gap-6 md:hidden overflow-hidden"
+              className="absolute top-full left-0 right-0 bg-transparent border-b border-white/5 flex flex-col items-center py-10 gap-6 md:hidden overflow-hidden"
             >
               {NAV_LINKS.map((link, i) => (
                 <motion.a
